@@ -2,8 +2,7 @@ import java.util.ArrayList;
 
 public class KMeans {
     public static void kMeans(ArrayList<Point> points,ArrayList<Point> centroids ){
-        int clusts=centroids.size();
-
+        int clusts=Runner.nc;
         //Point Cluster Assignment 
         for (int i=0; i<points.size();i++){
             double temp=Double.MAX_VALUE;
@@ -29,8 +28,9 @@ public class KMeans {
             meanSum.set(i,meanSum.get(i).div(count[i]));
         }
         for (int i=0;i<clusts;i++){
+            int temp = centroids.get(i).getCluster();
             centroids.set(i, meanSum.get(i)) ;
-            centroids.get(i).setCluster(i);
+            centroids.get(i).setCluster(temp);
         }
     }
 

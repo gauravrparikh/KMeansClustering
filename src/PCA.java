@@ -2,8 +2,13 @@ import java.util.ArrayList;
 
 public class PCA {
     public static int[] principalComp(ArrayList<Point> points, int numComps){
-        int dim=points.get(0).getX().length;
-        int n=points.size();
+
+        int dim=Runner.dim;
+        int n=Runner.np;
+        if (dim<=2) {
+            int [] components={0,1};
+            return components;
+        }
         int[] components =new int[numComps]; 
         Point means= new Point(dim);
         Point variance= new Point(dim);

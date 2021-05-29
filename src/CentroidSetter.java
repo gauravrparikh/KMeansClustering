@@ -8,10 +8,11 @@ public class CentroidSetter implements MouseInputListener{
     @Override
     public void mouseClicked(MouseEvent e) {
         if (!Runner.isClustering && Runner.manualClustering){
-            double[] coord= {e.getX(),e.getY()};
-            Point p = new Point(coord);
-            p.setCluster(counter);
-            Runner.centroids.set(counter, p);
+            double [] coords= new double[2];
+            coords[0]=e.getX();
+            coords[1]=e.getY();
+            Runner.centroids.get(counter).setX(coords);
+            Runner.centroids.get(counter).setCluster(counter);
             counter++;
             if (counter>=Runner.nc)counter=0;
             Runner.panel.repaint();

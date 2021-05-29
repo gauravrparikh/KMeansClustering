@@ -1,6 +1,4 @@
 import javax.swing.JPanel;
-
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ public static final int SIZE=10;
 
     public void paintComponent(Graphics g){
         Graphics2D g2=(Graphics2D) g;
-        Runner.run.getContentPane().setBackground(new Color(52,91,235));
         ArrayList<Point> pcaPoints = dimReduction(Runner.points);
         //ArrayList<Point> normalisePoints= normalize(pcaPoints);
         ArrayList<Point> transPoints = transform(pcaPoints);
@@ -37,16 +34,20 @@ public static final int SIZE=10;
 
         }
         else {//THIS NEEDS TO BE FIXED ?
-            for (int i=0;i<Runner.centroids.size();i++){
-                int PC1=(int)Runner.centroids.get(i).getX()[0];
-                int PC2=(int)Runner.centroids.get(i).getX()[1];
-                g2.setColor(Runner.colors[Runner.centroids.get(i).getCluster()]);
+            ArrayList<Point> pcaCentroids = dimReduction(Runner.centroids);
+            for (int i=0;i<pcaCentroids.size();i++){
+                int PC1=(int)pcaCentroids.get(i).getX()[0];
+                int PC2=(int)pcaCentroids.get(i).getX()[1];
+                g2.setColor(Runner.colors[pcaCentroids.get(i).getCluster()]);
                 g2.fillRect(PC1-SIZE/2, PC2-SIZE/2, SIZE, SIZE);
             }
         }
         
     }
     public static ArrayList<Point> dimReduction(ArrayList<Point> points){
+        try {
+            if (points.get(0).getX().length<=2) return points;   
+        } catch (Exception e) {}
         ArrayList<Point> pcaPoints=new ArrayList<Point>();
         for (Point p: points){
             Point n= new Point(2);

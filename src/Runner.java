@@ -1,6 +1,16 @@
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -12,12 +22,6 @@ import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.event.*;
-
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.FileNotFoundException;
 
 public class Runner extends JFrame{
     public static ArrayList<Point> points= new ArrayList<>();
@@ -33,12 +37,12 @@ public class Runner extends JFrame{
     public static final int FRAME_SIZE=800;
     public static final int MARGIN_SIZE=50;
     public static final int SUB_FRAME_SIZE=FRAME_SIZE-2*MARGIN_SIZE;
-    public static final Color[] colors= {new Color(255, 0,0),new Color(91, 217, 119 ),new Color(92, 90, 216),new Color(64, 124, 108),new Color(200, 0, 200),new Color(100, 0, 77),new Color(255,140,70)};
+    public static final Color[] colors= {new Color(255, 0,0),new Color(91, 217, 119 ),new Color(92, 90, 216),new Color(200, 0, 200),new Color(100, 0, 77),new Color(64, 124, 108),new Color(255,140,70)};
     public static Runner run;
 
     //Hyperparameters
     public static int dim=2;
-    public static int np=10;
+    public static int np=100;
     public static int nc=4;
     public static boolean manualClustering=false;
     public Runner(){
@@ -82,15 +86,26 @@ public class Runner extends JFrame{
                       System.out.println("    DFGHJKJNBVBN");
                     }
                   } );
+                Container settingsContainer= settingsFrame.getContentPane();
+                JPanel dimPanel = new JPanel();
+                JPanel pPanel= new JPanel();
+                JPanel cPanel= new JPanel();
+                JPanel manualPanel = new JPanel();
+        
+                settingsContainer.setLayout(new BoxLayout(settingsContainer, BoxLayout.Y_AXIS));
+                dimPanel.setLayout(new BoxLayout(dimPanel, BoxLayout.LINE_AXIS));
+                dimPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+                dimPanel.add(Box.createHorizontalStrut(2));
+                pPanel.setLayout(new BoxLayout(pPanel, BoxLayout.LINE_AXIS));
+                pPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+                pPanel.add(Box.createHorizontalStrut(2));
+                cPanel.setLayout(new BoxLayout(cPanel, BoxLayout.LINE_AXIS));
+                cPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+                cPanel.add(Box.createHorizontalStrut(2));
+                manualPanel.setLayout(new BoxLayout(manualPanel, BoxLayout.LINE_AXIS));
+                manualPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+                manualPanel.add(Box.createHorizontalStrut(2));
 
-                Border border = BorderFactory.createLineBorder(new Color(52,91,235),10);
-                border.isBorderOpaque();
-
-                JPanel settingPanel= new JPanel();
-                settingPanel.setSize(100, 100);
-                settingPanel.setBorder(border);
-
-                settingsFrame.add(settingPanel);
                 JSlider dimSlider= new JSlider(1, 9, dim);
                 dimSlider.setPaintTicks(true);
                 dimSlider.setSnapToTicks(true);
@@ -102,69 +117,66 @@ public class Runner extends JFrame{
                 pSlider.setPaintLabels(true);
                 pSlider.setMajorTickSpacing(100);
                 pSlider.setMinorTickSpacing(50);
-            
 
                 JSlider cSlider= new JSlider(1, colors.length, nc);
                 cSlider.setPaintTicks(true);
                 cSlider.setSnapToTicks(true);
                 cSlider.setPaintLabels(true);
                 cSlider.setMajorTickSpacing(1);
-
                 dimSlider.addChangeListener(new ChangeListener(){
-
                     @Override
                     public void stateChanged(ChangeEvent e) {
                         dim=dimSlider.getValue();
-                        settingPanel.repaint();
-                    }
-                    
+                        settingsContainer.repaint();
+                    }  
                 });
                 pSlider.addChangeListener(new ChangeListener(){
-
                     @Override
                     public void stateChanged(ChangeEvent e) {
-                        np=pSlider.getValue();
-                        
+                        np=pSlider.getValue();        
                     }
-                    
                 });
                 cSlider.addChangeListener(new ChangeListener(){
-
                     @Override
                     public void stateChanged(ChangeEvent e) {
                         nc=cSlider.getValue();
-                        
                     }
-                    
                 });
-                JLabel dimLabel=new JLabel("Dimensions");
-                JLabel pLabel=new JLabel("Points");
-                JLabel cLabel=new JLabel("Clusters");
-                JRadioButton manualCentroids= new JRadioButton("Manual Centroids");
+                JLabel dimLabel = new JLabel("Dimensions");
+                JLabel pLabel = new JLabel("Points");
+                JLabel cLabel = new JLabel("Clusters");
+                JRadioButton manualCentroids = new JRadioButton("Manual Centroids");
                 manualCentroids.setSelected(manualClustering);
                 manualCentroids.addActionListener(new ActionListener(){
-
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         if (manualClustering) manualClustering=false;
                         else manualClustering=true;
                         CentroidSetter.counter=0;
                         centroids=new ArrayList<Point>();
-                        double[] temp= new double[dim];
                         for (int i=0;i<nc;i++){
-                            centroids.add(new Point(temp,i));
+                            centroids.add(new Point(new double[2]));
                         }
                         panel.repaint();
-                        settingPanel.repaint();
+                        settingsContainer.repaint();
                     }        
                 });
-                settingPanel.add(dimLabel);
-                settingPanel.add(dimSlider);
-                settingPanel.add(pLabel);
-                settingPanel.add(pSlider);
-                settingPanel.add(cLabel);
-                settingPanel.add(cSlider);
-                settingPanel.add(manualCentroids);
+
+                dimPanel.add(dimLabel);
+                dimPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+                dimPanel.add(dimSlider);
+                pPanel.add(pLabel);
+                pPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+                pPanel.add(pSlider);
+                cPanel.add(cLabel);
+                cPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+                cPanel.add(cSlider);
+                manualPanel.add(manualCentroids);
+
+                settingsContainer.add(dimPanel);
+                settingsContainer.add(pPanel);
+                settingsContainer.add(cPanel);
+                settingsContainer.add(manualPanel);
             }
         });
         randomButton.addActionListener(new ActionListener(){
@@ -177,9 +189,9 @@ public class Runner extends JFrame{
                 else {
                     CentroidSetter.counter=0;
                     centroids=new ArrayList<Point>();
-                    double[] temp= new double[dim];
+                
                     for (int i=0;i<nc;i++){
-                        centroids.add(new Point(temp,i));
+                        centroids.add(new Point(new double[2]));
                     }
                 }
                 pcas=PCA.principalComp(points,2);
@@ -190,9 +202,10 @@ public class Runner extends JFrame{
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                isClustering=true;
                 KMeans.kMeans(points, centroids);
                 panel.repaint();
-                isClustering=true;
+
             }       
         });
         fileSelectButton.addActionListener(new ActionListener(){
@@ -220,12 +233,10 @@ public class Runner extends JFrame{
         buttonPanel.add(clusterButton);
         buttonPanel.add(fileSelectButton);
         buttonPanel.add(settingsButton);
-        setVisible(true);
-        
+        setVisible(true);   
     }
-
     public static void main(String[] args) throws Exception {
-       run =new Runner();
+       new Runner();
 
     }
 }
