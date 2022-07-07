@@ -1,6 +1,6 @@
 ## Getting Started
 
-This project implements the KMeans Clustering Algorithm in Java using n-dimensional inout data. Data can be read from a csv file or be randomly generated. The visual panel displays the clustering in higher dimensional data by performing a principal component analysis to showcase the 2 dimensions of maximum variance. The standard implementation performs complete clustering with an l-2 norm but has support for l1 norm implementation. 
+This project implements the KMeans Clustering Algorithm in Java using n-dimensional input data. Data can be read from a csv file or be randomly generated. The visual panel displays the clustering in higher dimensional data by performing a principal component analysis to showcase the 2 dimensions of maximum variance. The standard implementation performs complete clustering with an l-2 norm but has support for l1 norm implementation. 
 
 ## Folder Structure
 The workspace the following classes
